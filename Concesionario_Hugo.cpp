@@ -33,6 +33,7 @@ void leerDatosCliente(const string &nombreArchivo, Cliente listaClientes[], int 
 void leerDatosAuto(const string &nombreArchivo, Auto listaAutos[], int &tamanoLista);
 
 void caso1(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
+void caso2(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
 
 int main()
 {
@@ -43,7 +44,7 @@ int main()
 
     int autosComprados = 0;
     int autosVendidos = 0;
-    int idCliente;
+    int idCliente, idAuto;
     int opcionPrincipal;
     int tamanoListaAutos;
     int tamanoListaClientes;
@@ -60,9 +61,11 @@ int main()
         case 1:
             caso1(idCliente, listaClientes, listaAutos, tamanoListaClientes, tamanoListaAutos);
             break;
-        case 2:
 
+        case 2:
+            caso2(idCliente, listaClientes, listaAutos, tamanoListaClientes, tamanoListaAutos);
             break;
+
         case 3:
 
             break;
@@ -198,5 +201,54 @@ void caso1(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamano
     autosComprados = 0;
     autosVendidos = 0;
     cout << "Presione una tecla para continuar" << endl;
+    getch();
+}
+
+void caso2(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos)
+{
+    string nombreCliente;
+
+    cout << "\nIngrese el ID del cliente: ";
+    cin >> idCliente;
+
+    leerDatosCliente("clients.csv", listaClientes, tamanoListaClientes);
+
+    leerDatosAuto("cars_data.csv", listaAutos, tamanoListaAutos);
+
+    for (int i = 0; i < tamanoListaClientes; i++)
+    {
+        if (listaClientes[i].id == idCliente)
+        {
+            nombreCliente = listaClientes[i].nombre;
+            break;
+        }
+    }
+
+    if (nombreCliente.empty())
+    {
+        cout << "No se encontró ningún cliente con el ID " << idCliente << ".\n";
+        getch();
+        return;
+    }
+
+    cout << "Autos comprados por " << nombreCliente << ":\n";
+    for (int i = 0; i < tamanoListaAutos; i++)
+    {
+        if (listaAutos[i].compradoA == idCliente)
+        {
+            cout << listaAutos[i].fabricante << " " << listaAutos[i].modelo << " " << listaAutos[i].anio << "\n";
+        }
+    }
+
+    cout << "\nAutos vendidos por " << nombreCliente << ":\n";
+    for (int i = 0; i < tamanoListaAutos; i++)
+    {
+        if (listaAutos[i].vendidoA == idCliente)
+        {
+            cout << listaAutos[i].fabricante << " " << listaAutos[i].modelo << " " << listaAutos[i].anio << "\n";
+        }
+    }
+    cout << "Presione una tecla para continuar\n"
+         << endl;
     getch();
 }
