@@ -34,7 +34,7 @@ void leerDatosAuto(const string &nombreArchivo, Auto listaAutos[], int &tamanoLi
 
 void caso1(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
 void caso2(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
-
+void caso3(int idAuto, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
 int main()
 {
     Auto listaAutos[2000];
@@ -67,6 +67,7 @@ int main()
             break;
 
         case 3:
+            caso3(idAuto, listaClientes, listaAutos, tamanoListaClientes, tamanoListaAutos);
 
             break;
         case 4:
@@ -251,4 +252,65 @@ void caso2(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamano
     cout << "Presione una tecla para continuar\n"
          << endl;
     getch();
+}
+
+void caso3(int idAuto, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos)
+{
+    int opcion;
+    int idCliente;
+    string nombreCliente;
+
+    cout << "\nIngrese el ID del auto: ";
+    cin >> idAuto;
+
+    leerDatosAuto("cars_data.csv", listaAutos, tamanoListaAutos);
+
+    for (int i = 0; i < tamanoListaAutos; i++)
+    {
+        if (listaAutos[i].id == idAuto)
+        {
+            cout << "1. Ver datos del vendedor\n";
+            cout << "2. Ver datos del comprador\n";
+            cin >> opcion;
+
+            switch (opcion)
+            {
+            case 1:
+                idCliente = listaAutos[i].compradoA;
+                break;
+            case 2:
+                idCliente = listaAutos[i].vendidoA;
+                break;
+            default:
+                cout << "Opcion invalida\n";
+                return;
+            }
+            break;
+        }
+    }
+
+    leerDatosCliente("clients.csv", listaClientes, tamanoListaClientes);
+
+    bool clienteEncontrado = false;
+
+    for (int i = 0; i < tamanoListaClientes; i++)
+    {
+        if (listaClientes[i].id == idCliente)
+        {
+            cout << "==============================================\n";
+            cout << "Nombre: " << listaClientes[i].nombre << "\n";
+            cout << "Apellido: " << listaClientes[i].apellido << "\n";
+            cout << "Correo: " << listaClientes[i].correo << "\n";
+            cout << "Edad: " << listaClientes[i].edad << "\n";
+            cout << "==============================================\n";
+
+            clienteEncontrado = true;
+            break;
+        }
+    }
+
+    if (!clienteEncontrado)
+    {
+        cout << "No se encontró ningún cliente con el ID " << idCliente << ".\n";
+    }
 }
