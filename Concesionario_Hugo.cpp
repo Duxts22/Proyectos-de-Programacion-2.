@@ -35,6 +35,8 @@ void leerDatosAuto(const string &nombreArchivo, Auto listaAutos[], int &tamanoLi
 void caso1(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
 void caso2(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
 void caso3(int idAuto, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
+void caso6(int idAuto, Auto listaAutos[], int tamanoListaAutos);
+
 int main()
 {
     Auto listaAutos[2000];
@@ -77,6 +79,7 @@ int main()
 
             break;
         case 6:
+            caso6(idAuto, listaAutos, tamanoListaAutos);
 
             break;
         case 7:
@@ -182,7 +185,7 @@ void caso1(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamano
 
     if (nombreCliente.empty())
     {
-        cout << "No se encontró ningún cliente con el ID " << idCliente << ".\n";
+        cout << "No se encontro ningun cliente con el ID " << idCliente << ".\n";
         return;
     }
 
@@ -227,7 +230,7 @@ void caso2(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamano
 
     if (nombreCliente.empty())
     {
-        cout << "No se encontró ningún cliente con el ID " << idCliente << ".\n";
+        cout << "No se encontro ningun cliente con el ID " << idCliente << ".\n";
         getch();
         return;
     }
@@ -311,6 +314,52 @@ void caso3(int idAuto, Cliente listaClientes[], Auto listaAutos[], int tamanoLis
 
     if (!clienteEncontrado)
     {
-        cout << "No se encontró ningún cliente con el ID " << idCliente << ".\n";
+        cout << "No se encontro ningun cliente con el ID " << idCliente << ".\n";
+    }
+}
+
+void caso6(int idAuto, Auto listaAutos[], int tamanoListaAutos)
+{
+    int precioCompra, precioVenta, gananciaPerdida;
+
+    cout << "\nIngrese el ID del auto: ";
+    cin >> idAuto;
+
+    leerDatosAuto("cars_data.csv", listaAutos, tamanoListaAutos);
+
+    for (int i = 0; i < tamanoListaAutos; i++)
+    {
+        if (listaAutos[i].id == idAuto)
+        {
+            precioCompra = listaAutos[i].compradoPor;
+            precioVenta = listaAutos[i].vendidoPor;
+
+            if (precioVenta > 0)
+            {
+                gananciaPerdida = precioVenta - precioCompra;
+
+                if (gananciaPerdida > 0)
+                {
+                    cout << "===============================================================\n";
+                    cout << "El auto " << listaAutos[i].fabricante << " " << listaAutos[i].modelo << " genero una ganancia de " << gananciaPerdida << "\n";
+                    cout << "===============================================================\n";
+                }
+                else if (gananciaPerdida < 0)
+                {
+                    cout << "===============================================================\n";
+                    cout << "El auto " << listaAutos[i].fabricante << " " << listaAutos[i].modelo << " genero una perdida de " << -gananciaPerdida << "\n";
+                    cout << "===============================================================\n";
+                }
+                else
+                {
+                    cout << "El auto " << listaAutos[i].fabricante << " " << listaAutos[i].modelo << " no genero ni ganancias ni perdidas.\n";
+                }
+            }
+            else
+            {
+                cout << "El auto " << listaAutos[i].fabricante << " " << listaAutos[i].modelo << " no se ha vendido aun, por lo que se considera una perdida de " << precioCompra << ".\n";
+            }
+            break;
+        }
     }
 }
