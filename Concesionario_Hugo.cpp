@@ -35,6 +35,8 @@ void leerDatosAuto(const string &nombreArchivo, Auto listaAutos[], int &tamanoLi
 void caso1(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
 void caso2(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
 void caso3(int idAuto, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
+
+void caso5(int opcion, int id, const string &nombreArchivoClientes, const string &nombreArchivoAutos);
 void caso6(int idAuto, Auto listaAutos[], int tamanoListaAutos);
 
 int main()
@@ -76,7 +78,7 @@ int main()
 
             break;
         case 5:
-
+            caso5(opcionPrincipal, idCliente, "clients.csv", "cars_data.csv");
             break;
         case 6:
             caso6(idAuto, listaAutos, tamanoListaAutos);
@@ -315,6 +317,98 @@ void caso3(int idAuto, Cliente listaClientes[], Auto listaAutos[], int tamanoLis
     if (!clienteEncontrado)
     {
         cout << "No se encontro ningun cliente con el ID " << idCliente << ".\n";
+    }
+}
+
+void caso5(int opcion, int id, const string &nombreArchivoClientes, const string &nombreArchivoAutos)
+{
+    string linea;
+    int idActual;
+    bool encontrado = false;
+
+    cout << "\n1. Eliminar cliente\n";
+    cout << "2. Eliminar auto\n";
+    cin >> opcion;
+
+    cout << "\nIngrese el ID del cliente o auto a eliminar: ";
+    cin >> id;
+
+    switch (opcion)
+    {
+    case 1:
+    {
+        ifstream archivoClientes(nombreArchivoClientes);
+        ofstream archivoTemporal("temp.csv");
+
+        while (getline(archivoClientes, linea))
+        {
+            stringstream ss(linea);
+            ss >> idActual;
+
+            if (idActual != id)
+            {
+                archivoTemporal << linea << "\n";
+            }
+            else
+            {
+                encontrado = true;
+            }
+        }
+
+        archivoClientes.close();
+        archivoTemporal.close();
+
+        remove(nombreArchivoClientes.c_str());
+        rename("temp.csv", nombreArchivoClientes.c_str());
+
+        if (encontrado)
+        {
+            cout << "Cliente eliminado con éxito.\n";
+        }
+        else
+        {
+            cout << "No se encontró ningún cliente con el ID " << id << ".\n";
+        }
+    }
+    break;
+    case 2:
+    {
+        ifstream archivoAutos(nombreArchivoAutos);
+        ofstream archivoTemporal("temp.csv");
+
+        while (getline(archivoAutos, linea))
+        {
+            stringstream ss(linea);
+            ss >> idActual;
+
+            if (idActual != id)
+            {
+                archivoTemporal << linea << "\n";
+            }
+            else
+            {
+                encontrado = true;
+            }
+        }
+
+        archivoAutos.close();
+        archivoTemporal.close();
+
+        remove(nombreArchivoAutos.c_str());
+        rename("temp.csv", nombreArchivoAutos.c_str());
+
+        if (encontrado)
+        {
+            cout << "Auto eliminado con éxito.\n";
+        }
+        else
+        {
+            cout << "No se encontró ningún auto con el ID " << id << ".\n";
+        }
+    }
+    break;
+    default:
+        cout << "Opción inválida\n";
     }
 }
 
