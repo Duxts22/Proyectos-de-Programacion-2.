@@ -27,6 +27,11 @@ struct Auto
     int compradoPor;
 };
 
+Auto autoComprado;
+Cliente cliente;
+Auto listaAutos[2000];
+Cliente listaClientes[2000];
+
 void mostrarMenu(int &opcionUsuario);
 
 void leerDatosCliente(const string &nombreArchivo, Cliente listaClientes[], int &tamanoLista);
@@ -35,14 +40,12 @@ void leerDatosAuto(const string &nombreArchivo, Auto listaAutos[], int &tamanoLi
 void caso1(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
 void caso2(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
 void caso3(int idAuto, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos);
-
+void caso4(Auto &autoComprado, Cliente &cliente, const string &nombreArchivoAutos, const string &nombreArchivoClientes);
 void caso5(int opcion, int id, const string &nombreArchivoClientes, const string &nombreArchivoAutos);
 void caso6(int idAuto, Auto listaAutos[], int tamanoListaAutos);
 
 int main()
 {
-    Auto listaAutos[2000];
-    Cliente listaClientes[2000];
 
     bool estaCorriendo = true;
 
@@ -55,7 +58,7 @@ int main()
 
     string nombreCliente;
 
-    cout << "Bienvenido a la Consecionaria" << endl;
+    cout << "\nBienvenido a la Consecionaria" << endl;
     while (estaCorriendo)
     {
         mostrarMenu(opcionPrincipal);
@@ -75,10 +78,12 @@ int main()
 
             break;
         case 4:
+            caso4(autoComprado, cliente, "cars_data.csv", "clients.csv");
 
             break;
         case 5:
             caso5(opcionPrincipal, idCliente, "clients.csv", "cars_data.csv");
+
             break;
         case 6:
             caso6(idAuto, listaAutos, tamanoListaAutos);
@@ -320,6 +325,179 @@ void caso3(int idAuto, Cliente listaClientes[], Auto listaAutos[], int tamanoLis
     }
 }
 
+void caso4(Auto &autoComprado, Cliente &cliente, const string &nombreArchivoAutos, const string &nombreArchivoClientes)
+{
+    int tamanoListaClientes = 2000;
+    int tamanoListaAutos = 2000;
+
+    int opcion;
+    do
+    {
+        cout << "\nSeleccione una opcion:\n";
+        cout << "1. Agregar cliente\n";
+        cout << "2. Agregar auto\n";
+        cout << "3. Modificar auto\n";
+        cout << "4. Salir\n";
+        cin >> opcion;
+
+        switch (opcion)
+        {
+        case 1:
+        {
+            ifstream archivoCliente(nombreArchivoClientes);
+            string linea;
+            int ultimoIdCliente = 0;
+            while (getline(archivoCliente, linea))
+            {
+                stringstream ss(linea);
+                ss >> ultimoIdCliente;
+            }
+            archivoCliente.close();
+
+            cliente.id = ultimoIdCliente + 1;
+
+            cout << "\nIngrese la informacion del nuevo cliente:\n";
+            cout << "ID: " << cliente.id << "\n";
+            cout << "Nombre: ";
+            cin >> cliente.nombre;
+            cout << "Apellido: ";
+            cin >> cliente.apellido;
+            cout << "Correo: ";
+            cin >> cliente.correo;
+            cout << "Edad: ";
+            cin >> cliente.edad;
+
+            ofstream archivoClientesOut(nombreArchivoClientes, ios::app);
+            archivoClientesOut << cliente.id << ";" << cliente.nombre << ";" << cliente.apellido << ";" << cliente.correo << ";" << cliente.edad << "\n";
+            archivoClientesOut.close();
+
+            break;
+        }
+        case 2:
+        {
+            ifstream archivoAutos(nombreArchivoAutos);
+            string linea;
+            int ultimoIdAuto = 0;
+            while (getline(archivoAutos, linea))
+            {
+                stringstream ss(linea);
+                ss >> ultimoIdAuto;
+            }
+            archivoAutos.close();
+
+            autoComprado.id = ultimoIdAuto + 1;
+
+            leerDatosCliente("clients.csv", listaClientes, tamanoListaClientes);
+
+            cout << "\nIngrese la informacion del auto comprado:\n";
+            cout << "ID: " << autoComprado.id << "\n";
+            cout << "Fabricante: ";
+            cin >> autoComprado.fabricante;
+            cout << "Modelo: ";
+            cin >> autoComprado.modelo;
+            cout << "Año: ";
+            cin >> autoComprado.anio;
+            cout << "Precio compra: ";
+            cin >> autoComprado.compradoPor;
+            cout << "ID del cliente que lo compro: ";
+            cin >> autoComprado.vendidoA;
+
+            bool CompradorExiste = false;
+            for (int i = 0; i < tamanoListaClientes; i++)
+            {
+                if (listaClientes[i].id == autoComprado.vendidoA)
+                {
+                    CompradorExiste = true;
+                    break;
+                }
+            }
+
+            if (!CompradorExiste)
+            {
+                cout << "El cliente no existe. Por favor, agregue un nuevo cliente.\n";
+                return;
+            }
+
+            cout << "Precio venta: ";
+            cin >> autoComprado.vendidoPor;
+
+            cout << "ID del cliente que lo vendio: ";
+            cin >> autoComprado.compradoA;
+
+            bool VendedorExiste = false;
+            for (int i = 0; i < tamanoListaClientes; i++)
+            {
+                if (listaClientes[i].id == autoComprado.compradoA)
+                {
+                    VendedorExiste = true;
+                    break;
+                }
+            }
+
+            if (!VendedorExiste)
+            {
+                cout << "El cliente no existe. Por favor, agregue un nuevo cliente.\n";
+                return;
+            }
+
+            ofstream archivoAutosOut(nombreArchivoAutos, ios::app);
+            archivoAutosOut << autoComprado.id << ";" << autoComprado.fabricante << ";" << autoComprado.modelo << ";" << autoComprado.anio << ";" << autoComprado.vendidoA << ";" << autoComprado.compradoA << ";" << autoComprado.vendidoPor << ";" << autoComprado.compradoPor << "\n";
+            archivoAutosOut.close();
+
+            break;
+        }
+        case 3:
+        {
+            int idAuto;
+            cout << "\nIngrese el ID del auto a modificar: ";
+            cin >> idAuto;
+
+            leerDatosAuto("cars_data.csv", listaAutos, tamanoListaAutos);
+
+            bool autoEncontrado = false;
+            for (int i = 0; i < tamanoListaAutos; i++)
+            {
+                if (listaAutos[i].id == idAuto)
+                {
+                    autoEncontrado = true;
+                    cout << "Ingrese el nuevo ID del cliente que lo compro: ";
+                    cin >> listaAutos[i].compradoA;
+                    cout << "Ingrese el nuevo ID del cliente que lo vendio: ";
+                    cin >> listaAutos[i].vendidoA;
+
+                    ofstream archivoAutosOut(nombreArchivoAutos);
+                    for (int j = 0; j < tamanoListaAutos; j++)
+                    {
+                        archivoAutosOut << listaAutos[j].id << ";" << listaAutos[j].fabricante << ";" << listaAutos[j].modelo << ";" << listaAutos[j].anio << ";" << listaAutos[j].vendidoA << ";" << listaAutos[j].compradoA << ";" << listaAutos[j].vendidoPor << ";" << listaAutos[j].compradoPor << "\n";
+                    }
+                    archivoAutosOut.close();
+                    break;
+                }
+            }
+
+            cout << "Auto modificado con exito.\n";
+
+            if (!autoEncontrado)
+            {
+                cout << "No se encontro ningun auto con el ID " << idAuto << ".\n";
+            }
+            break;
+        }
+
+        case 4:
+        {
+            cout << "Saliendo...\n";
+            break;
+        }
+
+        default:
+        {
+            cout << "Opción no válida. Intente de nuevo.\n";
+            break;
+        }
+        }
+    } while (opcion != 3);
+}
 void caso5(int opcion, int id, const string &nombreArchivoClientes, const string &nombreArchivoAutos)
 {
     string linea;
@@ -433,6 +611,7 @@ void caso6(int idAuto, Auto listaAutos[], int tamanoListaAutos)
                 gananciaPerdida = precioVenta - precioCompra;
 
                 if (gananciaPerdida > 0)
+                
                 {
                     cout << "===============================================================\n";
                     cout << "El auto " << listaAutos[i].fabricante << " " << listaAutos[i].modelo << " genero una ganancia de " << gananciaPerdida << "\n";
