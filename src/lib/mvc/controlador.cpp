@@ -1,20 +1,8 @@
-#include "clases.h"
-#include "switch.h"
+#include "modelo.h"
+#include "controlador.h"
+#include "vista.h"
 
-void mostrarMenu(int &opcionUsuario)
-{
-    cout << "Que desea realizar" << endl
-         << "1. Ver cantidad de autos comprados y vendidos por clientes." << endl
-         << "2. Ver la lista de autos comprados y vendidos por clientes." << endl
-         << "3. Ver datos de clientes." << endl
-         << "4. Modificar datos." << endl
-         << "5. Eliminar datos" << endl
-         << "6. Mostrar ganancia o perdida de un auto." << endl
-         << "7. Salir." << endl;
-    cin >> opcionUsuario;
-}
-
-void caso1(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos)
+void Controlador::caso1(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos)
 {
     int autosComprados = 0;
     int autosVendidos = 0;
@@ -23,9 +11,9 @@ void caso1(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamano
     cout << "\nIngrese el ID del cliente: ";
     cin >> idCliente;
 
-    leerDatosCliente("clients.csv", listaClientes, tamanoListaClientes);
+    cliente.leerDatosCliente("src/data/clients.csv", listaClientes, tamanoListaClientes);
 
-    leerDatosAuto("cars_data.csv", listaAutos, tamanoListaAutos);
+    autos.leerDatosAuto("src/data/cars_data.csv", listaAutos, tamanoListaAutos);
 
     for (int i = 0; i < tamanoListaClientes; i++)
     {
@@ -61,16 +49,16 @@ void caso1(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamano
     getch();
 }
 
-void caso2(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos)
+void Controlador::caso2(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos)
 {
     string nombreCliente;
 
     cout << "\nIngrese el ID del cliente: ";
     cin >> idCliente;
 
-    leerDatosCliente("clients.csv", listaClientes, tamanoListaClientes);
+    cliente.leerDatosCliente("src/data/clients.csv", listaClientes, tamanoListaClientes);
 
-    leerDatosAuto("cars_data.csv", listaAutos, tamanoListaAutos);
+    autos.leerDatosAuto("src/data/cars_data.csv", listaAutos, tamanoListaAutos);
 
     for (int i = 0; i < tamanoListaClientes; i++)
     {
@@ -110,7 +98,7 @@ void caso2(int idCliente, Cliente listaClientes[], Auto listaAutos[], int tamano
     getch();
 }
 
-void caso3(int idAuto, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos)
+void Controlador::caso3(int idAuto, Cliente listaClientes[], Auto listaAutos[], int tamanoListaClientes, int tamanoListaAutos)
 {
     int opcion;
     int idCliente;
@@ -119,7 +107,7 @@ void caso3(int idAuto, Cliente listaClientes[], Auto listaAutos[], int tamanoLis
     cout << "\nIngrese el ID del auto: ";
     cin >> idAuto;
 
-    leerDatosAuto("cars_data.csv", listaAutos, tamanoListaAutos);
+    autos.leerDatosAuto("src/data/cars_data.csv", listaAutos, tamanoListaAutos);
 
     for (int i = 0; i < tamanoListaAutos; i++)
     {
@@ -145,7 +133,7 @@ void caso3(int idAuto, Cliente listaClientes[], Auto listaAutos[], int tamanoLis
         }
     }
 
-    leerDatosCliente("clients.csv", listaClientes, tamanoListaClientes);
+    cliente.leerDatosCliente("src/data/clients.csv", listaClientes, tamanoListaClientes);
 
     bool clienteEncontrado = false;
 
@@ -171,7 +159,7 @@ void caso3(int idAuto, Cliente listaClientes[], Auto listaAutos[], int tamanoLis
     }
 }
 
-void caso4(Auto &autoComprado, Cliente &cliente, const string &nombreArchivoAutos, const string &nombreArchivoClientes)
+void Controlador::caso4(Auto &autoComprado, Cliente &cliente, const string &nombreArchivoAutos, const string &nombreArchivoClientes)
 {
     int tamanoListaClientes = 2000;
     int tamanoListaAutos = 2000;
@@ -183,7 +171,6 @@ void caso4(Auto &autoComprado, Cliente &cliente, const string &nombreArchivoAuto
         cout << "1. Agregar cliente\n";
         cout << "2. Agregar auto\n";
         cout << "3. Modificar auto\n";
-        cout << "4. Salir\n";
         cin >> opcion;
 
         switch (opcion)
@@ -233,7 +220,7 @@ void caso4(Auto &autoComprado, Cliente &cliente, const string &nombreArchivoAuto
 
             autoComprado.id = ultimoIdAuto + 1;
 
-            leerDatosCliente("clients.csv", listaClientes, tamanoListaClientes);
+            cliente.leerDatosCliente("src/data/clients.csv", listaClientes, tamanoListaClientes);
 
             cout << "\nIngrese la informacion del auto comprado:\n";
             cout << "ID: " << autoComprado.id << "\n";
@@ -298,7 +285,7 @@ void caso4(Auto &autoComprado, Cliente &cliente, const string &nombreArchivoAuto
             cout << "\nIngrese el ID del auto a modificar: ";
             cin >> idAuto;
 
-            leerDatosAuto("cars_data.csv", listaAutos, tamanoListaAutos);
+            autos.leerDatosAuto("src/data/cars_data.csv", listaAutos, tamanoListaAutos);
 
             bool autoEncontrado = false;
             for (int i = 0; i < tamanoListaAutos; i++)
@@ -330,21 +317,15 @@ void caso4(Auto &autoComprado, Cliente &cliente, const string &nombreArchivoAuto
             break;
         }
 
-        case 4:
-        {
-            cout << "Saliendo...\n";
-            break;
-        }
-
         default:
         {
-            cout << "Opción no válida. Intente de nuevo.\n";
+            cout << "Opcion no valida. Intente de nuevo.\n";
             break;
         }
         }
     } while (opcion != 3);
 }
-void caso5(int opcion, int id, const string &nombreArchivoClientes, const string &nombreArchivoAutos)
+void Controlador::caso5(int opcion, int id, const string &nombreArchivoClientes, const string &nombreArchivoAutos)
 {
     string linea;
     int idActual;
@@ -362,7 +343,7 @@ void caso5(int opcion, int id, const string &nombreArchivoClientes, const string
     case 1:
     {
         ifstream archivoClientes(nombreArchivoClientes);
-        ofstream archivoTemporal("temp.csv");
+        ofstream archivoTemporal("src/data/temp.csv");
 
         while (getline(archivoClientes, linea))
         {
@@ -383,7 +364,7 @@ void caso5(int opcion, int id, const string &nombreArchivoClientes, const string
         archivoTemporal.close();
 
         remove(nombreArchivoClientes.c_str());
-        rename("temp.csv", nombreArchivoClientes.c_str());
+        rename("src/data/temp.csv", nombreArchivoClientes.c_str());
 
         if (encontrado)
         {
@@ -398,7 +379,7 @@ void caso5(int opcion, int id, const string &nombreArchivoClientes, const string
     case 2:
     {
         ifstream archivoAutos(nombreArchivoAutos);
-        ofstream archivoTemporal("temp.csv");
+        ofstream archivoTemporal("src/data/temp.csv");
 
         while (getline(archivoAutos, linea))
         {
@@ -419,7 +400,7 @@ void caso5(int opcion, int id, const string &nombreArchivoClientes, const string
         archivoTemporal.close();
 
         remove(nombreArchivoAutos.c_str());
-        rename("temp.csv", nombreArchivoAutos.c_str());
+        rename("src/data/temp.csv", nombreArchivoAutos.c_str());
 
         if (encontrado)
         {
@@ -436,14 +417,14 @@ void caso5(int opcion, int id, const string &nombreArchivoClientes, const string
     }
 }
 
-void caso6(int idAuto, Auto listaAutos[], int tamanoListaAutos)
+void Controlador::caso6(int idAuto, Auto listaAutos[], int tamanoListaAutos)
 {
     int precioCompra, precioVenta, gananciaPerdida;
 
     cout << "\nIngrese el ID del auto: ";
     cin >> idAuto;
 
-    leerDatosAuto("cars_data.csv", listaAutos, tamanoListaAutos);
+    autos.leerDatosAuto("src/data/cars_data.csv", listaAutos, tamanoListaAutos);
 
     for (int i = 0; i < tamanoListaAutos; i++)
     {
@@ -482,7 +463,7 @@ void caso6(int idAuto, Auto listaAutos[], int tamanoListaAutos)
     }
 }
 
-void ejecutarOpcion(int &opcionPrincipal, int &idCliente, Cliente listaClientes[], Auto listaAutos[], int &tamanoListaClientes, int &tamanoListaAutos, Auto &autoComprado, Cliente &cliente, bool &estaCorriendo)
+void Controlador::ejecutarOpcion(int &opcionPrincipal, int &idCliente, Cliente listaClientes[], Auto listaAutos[], int &tamanoListaClientes, int &tamanoListaAutos, Auto &autoComprado, Cliente &cliente, bool &estaCorriendo)
 {
     switch (opcionPrincipal)
     {
@@ -499,11 +480,11 @@ void ejecutarOpcion(int &opcionPrincipal, int &idCliente, Cliente listaClientes[
         break;
 
     case 4:
-        caso4(autoComprado, cliente, "cars_data.csv", "clients.csv");
+        caso4(autoComprado, cliente, "src/data/cars_data.csv", "src/data/clients.csv");
         break;
 
     case 5:
-        caso5(opcionPrincipal, idCliente, "clients.csv", "cars_data.csv");
+        caso5(opcionPrincipal, idCliente, "src/data/clients.csv", "src/data/cars_data.csv");
         break;
 
     case 6:

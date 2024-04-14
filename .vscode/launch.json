@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/lukpe/Desktop/P2/personal/miweb",
-      "program": "c:/Users/lukpe/Desktop/P2/personal/miweb/build/Debug/outDebug",
+      "cwd": "c:/Users/lukpe/Desktop/Proyectos-de-Programacion-2/PCarros/src",
+      "program": "c:/Users/lukpe/Desktop/Proyectos-de-Programacion-2/PCarros/src/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

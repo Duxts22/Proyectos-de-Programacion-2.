@@ -8,17 +8,21 @@
 
 using namespace std;
 
-struct Cliente
+class Cliente
 {
+public:
     int id;
     string nombre;
     string apellido;
     string correo;
     int edad;
+
+    void leerDatosCliente(const string &nombreArchivo, Cliente *listaClientes, int &tamanoLista);
 };
 
-struct Auto
+class Auto
 {
+public:
     int id;
     string fabricante;
     string modelo;
@@ -27,10 +31,12 @@ struct Auto
     int compradoA;
     int vendidoPor;
     int compradoPor;
+
+    void leerDatosAuto(const string &nombreArchivo, Auto *listaAutos, int &tamanoLista);
 };
 
-extern Auto listaAutos[2000];
-extern Cliente listaClientes[2000];
+extern Cliente cliente;
+extern Auto autos;
 
-void leerDatosCliente(const string &nombreArchivo, Cliente listaClientes[], int &tamanoLista);
-void leerDatosAuto(const string &nombreArchivo, Auto listaAutos[], int &tamanoLista);
+extern Auto *listaAutos;
+extern Cliente *listaClientes;

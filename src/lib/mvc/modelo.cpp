@@ -1,7 +1,8 @@
-#include "switch.h"
-#include "clases.h"
+#include "controlador.h"
+#include "modelo.h"
 
-void leerDatosCliente(const string &nombreArchivo, Cliente listaClientes[], int &tamanoLista)
+
+void Cliente::leerDatosCliente(const string &nombreArchivo, Cliente listaClientes[], int &tamanoLista)
 {
     ifstream archivoClientes(nombreArchivo);
     string linea;
@@ -25,7 +26,7 @@ void leerDatosCliente(const string &nombreArchivo, Cliente listaClientes[], int 
     }
 }
 
-void leerDatosAuto(const string &nombreArchivo, Auto listaAutos[], int &tamanoLista)
+void Auto::leerDatosAuto(const string &nombreArchivo, Auto listaAutos[], int &tamanoLista)
 {
     ifstream archivoAutos(nombreArchivo);
     string linea;
